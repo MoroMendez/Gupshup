@@ -18,6 +18,9 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
     console.log(req.body)
     res.status(200).json( )
 
+if(req.body.channel == 'telegram') { return res.status(200).json( ) }
+
+
     const cfg = log.request(logger, req, 'webhook')
     let answ = {}
     
