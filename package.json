@@ -1,0 +1,26 @@
+{
+    "name": "brightpattern",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "axios": "^1.5.1",
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "follow-redirects": "^1.14.6",
+        "form-data": "^3.0.0",
+        "is-json": "^2.0.1",
+        "log4js": "^6.3.0",
+        "moment": "^2.27.0",
+        "path": "^0.12.7",
+        "request": "^2.88.2",
+        "request-ip": "^3.3.0",
+        "twilio": "^4.18.1",
+        "uniqid": "^5.2.0"
+    }
+}
