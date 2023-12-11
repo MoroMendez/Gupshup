@@ -4,10 +4,11 @@ const bodyParser = require('body-parser')
 const log = require('./middlewares/log')
 const fs = require('fs')
 const https = require('https')
+require('dotenv').config();
 
 const app = express()
 const logger = log.create(__filename)
-const portExpress = get('global.servicePort')
+
 
 
 app.use(function(req, res, next) {
@@ -24,8 +25,8 @@ app.use(require('./routes/index'))
 app.use( express.static('public'))
 
 
- app.listen(portExpress, () => {
+ app.listen(process.env.PORT, () => {
         const cfg = log.initiate(logger, undefined, 'app.listen')
         console.clear()
-        log.info(cfg, `Server Online >> localhost:${portExpress}`)
+        log.info(cfg, `Server Online >> localhost:${process.env.PORT}`)
     })
