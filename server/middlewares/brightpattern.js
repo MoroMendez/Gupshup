@@ -305,7 +305,7 @@ downloadFile = async (uuid, data) => {
             return response = response.data.toString('base64')
         })
 
-        fs.writeFile(`./public/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
+        fs.writeFile(`public/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
 
         return { ok: true, data: data64 }
 
