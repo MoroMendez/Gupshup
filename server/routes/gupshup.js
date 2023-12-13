@@ -18,7 +18,7 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
     console.log(req.body)
     res.status(200).json( )
 
-if(req.body.channel == 'telegram') { return res.status(200).json( ) }
+    if(req.body.channel == 'telegram') { return res.status(200).json( ) }
 
 
     const cfg = log.request(logger, req, 'webhook')
@@ -39,7 +39,7 @@ if(req.body.channel == 'telegram') { return res.status(200).json( ) }
         //     return res.status(200).json( )
         // }
 
-        if (m.type=='text') {
+        if (m.type=='text' || m.type=='audio') {
 
                 dataMessage = {
                     whatsappNumber: c.sourceId,
@@ -58,11 +58,6 @@ if(req.body.channel == 'telegram') { return res.status(200).json( ) }
 
 
                 if (m.type=='image') {
-                    filePath = m.url
-                    Mediafile = m.url.toString().split('/')
-                    fileName = Mediafile[Mediafile.length - 1]
-
-                } else if (m.type=='audio') {
                     filePath = m.url
                     Mediafile = m.url.toString().split('/')
                     fileName = Mediafile[Mediafile.length - 1]

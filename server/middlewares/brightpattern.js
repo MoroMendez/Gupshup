@@ -402,36 +402,46 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `http://54.85.110.28:3000/${dir}/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `https://e851-190-22-120-162.ngrok-free.app/${dir}/${data.fileName.replace(/ /g, "_")}`
+                
+                let data_1 = qs.stringify({
+                    'channel': 'whatsapp',
+                    'source': '917834811114',
+                    'src.name': 'DevMoro',
+                    'destination': data.phone,
+                    'disablePreview': 'true',
+                    'encode': 'true' 
+                  })
                 axiosRequest = {
                     url,
                     method: 'post',
                     headers: {
                         'D360-API-KEY': authorization
                     },
-                    data: 
-                    {
-                        "recipient_type": "individual",
-                        "to": data.phone,
-                        "type": "text",
-                        "text": {
-                            "body": data.msg
-                        }
-                    }
+                    data:data_1
                 }
                 //console.log(data.fileType)
                 if (data.fileType in ['JPG', 'JPEG', 'PNG', 'GIF']){
-                    axiosRequest.data.type = "image"
-                    axiosRequest.data.link= { "link": fileUrl}
+                    axiosRequest.data.message = {
+                        "type":"image",
+                        "originalUrl":fileUrl,
+                        "previewUrl":fileUrl,
+                        "caption":data.fileName
+                     }
                  } else if (data.fileType in ['AAC', 'AMR', 'MP3', 'OGG'])
                  {
-                    axiosRequest.data.type = "audio"
-                    axiosRequest.data.link= { "link": fileUrl}
+                    axiosRequest.data.message = {
+                        "type":"audio",
+                        "url":fileUrl
+                     }
                  }
                 else
                 {
-                    axiosRequest.data.type = "document"
-                    axiosRequest.data.link= { "link": fileUrl}
+                    axiosRequest.data.message = {
+                        "type":"file",
+                        "url":fileUrl,
+                        "filename":data.fileName
+                     }
                  }
 
                 //console.log(axiosRequest)
