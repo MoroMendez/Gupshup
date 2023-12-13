@@ -402,7 +402,7 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `https://e851-190-22-120-162.ngrok-free.app/${dir}/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `${dir}/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = qs.stringify({
                     'channel': 'whatsapp',

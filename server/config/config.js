@@ -5,7 +5,7 @@ const cfg = {
         vendor: 'bp',
         upload: {
             directory: 'uploads',
-            uri: `http://54.85.110.28:3000`,
+            uri: `https://1521-190-22-116-217.ngrok-free.app`,
             maxSizeMbPerFile: 50
         }
     },
