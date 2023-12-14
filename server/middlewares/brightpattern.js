@@ -402,7 +402,7 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `${dir}/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `./server/upload/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = qs.stringify({
                     'channel': 'whatsapp',
