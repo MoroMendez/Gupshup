@@ -404,28 +404,19 @@ createWorker = (uuid, chatID, phone) => {
 
                 const fileUrl = `/app/server/uploads/${data.fileName.replace(/ /g, "_")}`
                 
-                let data_1 = qs.stringify({
+                let data_1 = {
                     'channel': 'whatsapp',
                     'source': '917834811114',
                     'src.name': 'DevMoro',
                     'destination': data.phone,
                     'disablePreview': 'true',
                     'encode': 'true' 
-                  })
-                axiosRequest = {
-                    url,
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    headers: {
-                        'apikey': authorization,
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    data:data_1
-                }
+                  }
+                
                 //console.log(data.fileType)
                 if (data.fileType in ['JPG', 'JPEG', 'PNG', 'GIF']){
                     
-                    axiosRequest.data.message = {
+                     data1_1.message = {
                         "type":"image",
                         "originalUrl":fileUrl,
                         "previewUrl":fileUrl,
@@ -433,19 +424,31 @@ createWorker = (uuid, chatID, phone) => {
                      }
                  } else if (data.fileType in ['AAC', 'AMR', 'MP3', 'OGG'])
                  {
-                    axiosRequest.data.message = {
+                     data_1.message = {
                         "type":"audio",
                         "url":fileUrl
                      }
                  }
                 else
                 {
-                    axiosRequest.data.message = {
+                    data_1.message = {
                         "type":"file",
                         "url":fileUrl,
                         "filename":data.fileName
                      }
                  }
+
+                 axiosRequest = {
+                    url,
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    headers: {
+                        'apikey': authorization,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data:qs.stringify(data_1)
+                }
+
 
                 console.log(axiosRequest)
 
