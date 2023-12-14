@@ -6,6 +6,7 @@ const logger = log.create(__filename)
 const fs = require('fs');
 const qs = require('qs');
 const FormData = require('form-data');
+const { URLSearchParams } = require('url');
 // const { PassThrough } = require("stream");
 // const { Http2ServerResponse } = require('http2')
 // const pathFile = require('path')
@@ -305,7 +306,7 @@ downloadFile = async (uuid, data) => {
             return response = response.data.toString('base64')
         })
 
-        fs.writeFile(`/app/server/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
+        fs.writeFile(`/GIT/Gupshup/public/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
 
         return { ok: true, data: data64 }
 
@@ -402,41 +403,76 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `/app/server/uploads/${data.fileName.replace(/ /g, "_")}`
+                //const fileUrl = `https://cb6b-190-22-120-162.ngrok-free.app/uploads/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `https://gupshup-production.up.railway.app/uploads/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = {
                     'channel': 'whatsapp',
                     'source': '917834811114',
-                    'src.name': 'DevMoro',
                     'destination': data.phone,
+                    'src.name': 'DevMoro',                    
                     'disablePreview': 'true',
                     'encode': 'true' 
                   }
+
+                 const encodedParams = new URLSearchParams(); 
                 
                 //console.log(data.fileType)
                 if (data.fileType in ['JPG', 'JPEG', 'PNG', 'GIF']){
                     
-                     data1_1.message = {
+                    data_1.message =  JSON.stringify({
                         "type":"image",
                         "originalUrl":fileUrl,
                         "previewUrl":fileUrl,
                         "caption":data.fileName
-                     }
+                     })
+                    
                  } else if (data.fileType in ['AAC', 'AMR', 'MP3', 'OGG'])
                  {
-                     data_1.message = {
+                     data_1.message = JSON.stringify({
                         "type":"audio",
                         "url":fileUrl
-                     }
+                     })
                  }
                 else
                 {
-                    data_1.message = {
+                    data_1.message = JSON.stringify({
                         "type":"file",
                         "url":fileUrl,
                         "filename":data.fileName
-                     }
+                     })
                  }
+
+
+//                   encodedParams.set('channel', 'whatsapp');
+//                   encodedParams.set('source', '917834811114');
+//                   encodedParams.set('destination', data.phone);
+//                   encodedParams.set('message', JSON.stringify(data_1.message));
+//                   encodedParams.set('src.name', 'DevMoro');
+//                   encodedParams.set('disablePreview', 'true');
+//                   encodedParams.set('encode', 'true');
+
+// const options = {
+//   method: 'POST',
+//   url: 'https://api.gupshup.io/sm/api/v1/msg',
+//   headers: {
+//     apikey: authorization,
+//     accept: 'application/json',
+//     'Content-Type': 'application/x-www-form-urlencoded'
+//   },
+//   data: encodedParams,
+// };
+
+// axios
+//   .request(options)
+//   .then(function (response) {
+//     console.log(response.data);
+//   })
+//   .catch(function (error) {
+//     console.error(error);
+//   });
+
+                    
 
                  axiosRequest = {
                     url,
@@ -446,13 +482,19 @@ createWorker = (uuid, chatID, phone) => {
                         'apikey': authorization,
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    data:qs.stringify(data_1)
+                    data:data_1
                 }
 
 
                 console.log(axiosRequest)
 
-                answ = await axios.request(axiosRequest)
+                await axios.request(axiosRequest)
+                    .then(function (response) {
+                        console.log(response.data);
+                      })
+                    .catch(function (error) {
+                        console.error(error);
+                      })
                 
 
                 break;
