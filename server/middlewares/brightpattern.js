@@ -424,6 +424,7 @@ createWorker = (uuid, chatID, phone) => {
                 }
                 //console.log(data.fileType)
                 if (data.fileType in ['JPG', 'JPEG', 'PNG', 'GIF']){
+                    
                     axiosRequest.data.message = {
                         "type":"image",
                         "originalUrl":fileUrl,
