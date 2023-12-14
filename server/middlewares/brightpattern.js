@@ -305,7 +305,7 @@ downloadFile = async (uuid, data) => {
             return response = response.data.toString('base64')
         })
 
-        fs.writeFile(`./server/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
+        fs.writeFile(`/app/server/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
 
         return { ok: true, data: data64 }
 
@@ -402,7 +402,7 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `./server/upload/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `/app/server/uploads/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = qs.stringify({
                     'channel': 'whatsapp',
