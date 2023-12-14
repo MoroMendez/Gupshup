@@ -415,8 +415,10 @@ createWorker = (uuid, chatID, phone) => {
                 axiosRequest = {
                     url,
                     method: 'post',
+                    maxBodyLength: Infinity,
                     headers: {
-                        'D360-API-KEY': authorization
+                        'apikey': authorization,
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     data:data_1
                 }
