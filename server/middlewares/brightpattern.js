@@ -446,7 +446,7 @@ createWorker = (uuid, chatID, phone) => {
                      }
                  }
 
-                //console.log(axiosRequest)
+                console.log(axiosRequest)
 
                 answ = await axios.request(axiosRequest)
                 
