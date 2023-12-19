@@ -1,19 +1,19 @@
 //Configuracion general
 const cfg = {
     global: {
-        servicePort: 3000,
+        servicePort: process.env.PORT,
         vendor: 'bp',
         upload: {
             directory: 'uploads',
-            uri: `https://1521-190-22-116-217.ngrok-free.app`,
+            uri: ``,
             maxSizeMbPerFile: 50
         }
     },
     accounts: {
         gupshup: {
-            url: 'https://api.gupshup.io/sm/api/v1/msg',
-            accesstoken: '7n4iidqu1v0zzl9fvu5adtdipg9ynlqt',
-            numero: '917834811114'
+            url: process.env.URL_GSH,
+            accesstoken: process.env.TOKEN_GSH,
+            numero: process.env.NUM_GSH
         },
         brithpattern: {
             url: {
@@ -26,9 +26,9 @@ const cfg = {
                     files: '/{chatId}/files'
                 }
             },
-            platform: 'c3n-demo1.brightpattern.com',
+            platform: process.env.PLT_BP,
             authorization: 'MOBILE-API-140-327-PLAIN appId="{appId}", clientId="{clientId}"',
-            appId: '0e1f03d6fe424e1cac974cf87e829e62',
+            appId: process.env.APPID_BP,
             userAgent: 'MobileClient',
             timeOutMiliSec: 15000
         }

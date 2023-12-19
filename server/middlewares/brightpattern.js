@@ -444,36 +444,6 @@ createWorker = (uuid, chatID, phone) => {
                  }
 
 
-//                   encodedParams.set('channel', 'whatsapp');
-//                   encodedParams.set('source', '917834811114');
-//                   encodedParams.set('destination', data.phone);
-//                   encodedParams.set('message', JSON.stringify(data_1.message));
-//                   encodedParams.set('src.name', 'DevMoro');
-//                   encodedParams.set('disablePreview', 'true');
-//                   encodedParams.set('encode', 'true');
-
-// const options = {
-//   method: 'POST',
-//   url: 'https://api.gupshup.io/sm/api/v1/msg',
-//   headers: {
-//     apikey: authorization,
-//     accept: 'application/json',
-//     'Content-Type': 'application/x-www-form-urlencoded'
-//   },
-//   data: encodedParams,
-// };
-
-// axios
-//   .request(options)
-//   .then(function (response) {
-//     console.log(response.data);
-//   })
-//   .catch(function (error) {
-//     console.error(error);
-//   });
-
-                    
-
                  axiosRequest = {
                     url,
                     method: 'post',

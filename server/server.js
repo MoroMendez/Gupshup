@@ -1,10 +1,13 @@
+require('dotenv').config();
+
+
 const { get } = require('./config/config')
 const express = require('express')
 const bodyParser = require('body-parser')
 const log = require('./middlewares/log')
 const fs = require('fs')
 const https = require('https')
-require('dotenv').config();
+
 
 const app = express()
 const logger = log.create(__filename)
