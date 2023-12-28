@@ -332,6 +332,8 @@ createWorker = (uuid, chatID, phone) => {
     worker.on('message', async (data) => {
         let url = get('accounts.gupshup.url')
         let authorization = get('accounts.gupshup.accesstoken')
+        let source = get('accounts.gupshup.numero')
+        let srcname = get('accounts.gupshup.namebot')
         let axiosRequest = null
         let answ = null
 
@@ -369,8 +371,8 @@ createWorker = (uuid, chatID, phone) => {
                 } else {
                     let data_1 = qs.stringify({
                             'channel': 'whatsapp',
-                            'source': '917834811114',
-                            'src.name': 'DevMoro',
+                            'source': source,
+                            'src.name': srcname,
                             'destination': data.phone,
                             'message': data.msg,
                             'disablePreview': 'true',
@@ -403,14 +405,13 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                //const fileUrl = `https://cb6b-190-22-120-162.ngrok-free.app/uploads/${data.fileName.replace(/ /g, "_")}`
-                const fileUrl = `https://gupshup-production.up.railway.app/uploads/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `/uploads/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = {
                     'channel': 'whatsapp',
-                    'source': '917834811114',
+                    'source': source,
                     'destination': data.phone,
-                    'src.name': 'DevMoro',                    
+                    'src.name': srcname,                    
                     'disablePreview': 'true',
                     'encode': 'true' 
                   }

@@ -13,7 +13,8 @@ const cfg = {
         gupshup: {
             url: process.env.URL_GSH,
             accesstoken: process.env.TOKEN_GSH,
-            numero: process.env.NUM_GSH
+            numero: process.env.NUM_GSH,
+            namebot: process.env.NAME_GSH
         },
         brithpattern: {
             url: {
