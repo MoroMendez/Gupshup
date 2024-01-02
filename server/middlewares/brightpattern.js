@@ -405,7 +405,7 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `/uploads/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `https://apibp-conauto.nimbuscc.mx:3030/uploads/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = {
                     'channel': 'whatsapp',
