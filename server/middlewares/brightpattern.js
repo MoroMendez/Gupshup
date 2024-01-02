@@ -334,10 +334,12 @@ createWorker = (uuid, chatID, phone) => {
         let authorization = get('accounts.gupshup.accesstoken')
         let source = get('accounts.gupshup.numero')
         let srcname = get('accounts.gupshup.namebot')
+        let file_url = get('accounts.gupshup.fileurl')
+
         let axiosRequest = null
         let answ = null
 
-        console.log('data', data)
+        //console.log('data', data)
 
         switch (data.type) {
             case 'message':
@@ -405,7 +407,8 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `https://apibp-conauto.nimbuscc.mx:3030/uploads/${data.fileName.replace(/ /g, "_")}`
+                const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
+                //const fileUrl = `https://apibp-conauto.nimbuscc.mx:3030/uploads/${data.fileName.replace(/ /g, "_")}`
                 
                 let data_1 = {
                     'channel': 'whatsapp',
@@ -457,7 +460,7 @@ createWorker = (uuid, chatID, phone) => {
                 }
 
 
-                console.log(axiosRequest)
+                //console.log(axiosRequest)
 
                 await axios.request(axiosRequest)
                     .then(function (response) {
