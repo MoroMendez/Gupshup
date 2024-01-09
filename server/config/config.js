@@ -14,7 +14,8 @@ const cfg = {
             url: process.env.URL_GSH,
             accesstoken: process.env.TOKEN_GSH,
             numero: process.env.NUM_GSH,
-            namebot: process.env.NAME_GSH
+            namebot: process.env.NAME_GSH,
+            fileurl:process.env.C3N_FILEURL
         },
         brithpattern: {
             url: {

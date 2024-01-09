@@ -9,24 +9,29 @@ const pathFile = require('path')
 const app = express()
 const logger = log.create(__filename)
 const vendor = get('global.vendor')
+const wnumber = get('accounts.gupshup.numero')
 const path = 'gupshup'
 
 
 
 app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
 
-    console.log(req.body)
+    //console.log(req.body)
+    
+
+    if(req.body.payload.type == 'sandbox-start') { return res.status(200).json( ) }
+
+    if(req.body.type == 'message-event' || req.body.type == 'billing-event') { return res.status(200).json( ) }
+    
+
+    
     res.status(200).json( )
-
-    if(req.body.channel == 'telegram') { return res.status(200).json( ) }
-
-
     const cfg = log.request(logger, req, 'webhook')
     let answ = {}
     
-    let m = JSON.parse(req.body.messageobj)
-    let s = JSON.parse(req.body.senderobj)
-    let c = JSON.parse(req.body.contextobj)
+    let {body} = req
+    let p = body.payload
+    let s = body.payload.sender
 
     
 
@@ -39,47 +44,66 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
         //     return res.status(200).json( )
         // }
 
-        if (m.type=='text' || m.type=='audio') {
+        if (p.type=='text' || p.type=='audio') {
 
                 dataMessage = {
-                    whatsappNumber: c.sourceId,
-                    phone: m.from,
-                    message: m.text,
-                    name: s.display,
+                    whatsappNumber: wnumber,
+                    phone: p.source,
+                    message: p.payload.text,
+                    name: s.name,
                     type: 'TEXT',
                 }
 
 
+            } else if (p.type=='sticker') {
+                dataMessage = {
+                    whatsappNumber: wnumber,
+                    phone: p.source,
+                    message: `Sticker - ${p.payload.url}`,
+                    name: s.name,
+                    type: 'TEXT',
+                }
+                
+            } else if (p.type=='location') {
+                dataMessage = {
+                    whatsappNumber: wnumber,
+                    phone: p.source,
+                    message: `https://www.google.com/maps/@${p.payload.latitude},${p.payload.longitude},15z?entry=ttu`,
+                    name: s.name,
+                    type: 'TEXT',
+                }
+                
             } else {
 
                 let fileName = null
-                let Mediafile = null
                 let filePath = null
 
 
-                if (m.type=='image') {
-                    filePath = m.url
-                    Mediafile = m.url.toString().split('/')
-                    fileName = Mediafile[Mediafile.length - 1]
+                if (p.type=='image') {
+                    filePath = p.payload.url
+                    Mediafile = filePath.toString().split('/')
+                    Mediafile = Mediafile[Mediafile.length - 1]
+                    console.log('Mediafile 1',Mediafile)
+                    Mediafile = Mediafile.toString().split('?')
+                    console.log('Mediafile 2',Mediafile)
+                    fileName = Mediafile[0]+'.jpg'
 
-                } else if (m.type=='file') {
-                    filePath = m.url
-                    Mediafile = m.url.toString().split('/')
-                    fileName = Mediafile[Mediafile.length - 1]
+                } else if (p.type=='file') {
+                    filePath = p.payload.url
+                    fileName = p.payload.name
 
                 } else {
-                    filePath = m.url
-                    Mediafile = m.url.toString().split('/')
-                    fileName = m.caption
+                    filePath = p.payload.url
+                    fileName = p.payload.name
                 }
 
                 answFile = await downloadFile(filePath, pathFile.join(__dirname, `../${get('global.upload.directory')}/${fileName}`))
 
                 dataMessage = {
-                    whatsappNumber: c.sourceId,
-                    phone: m.from,
-                    message: m.text,
-                    name: s.display,
+                    whatsappNumber: wnumber,
+                    phone: p.source,
+                    message: p.payload.text,
+                    name: s.name,
                     type: 'FILE',
                     filePath: pathFile.join(__dirname, `../${get('global.upload.directory')}/${fileName}`),
                     fileName: fileName
