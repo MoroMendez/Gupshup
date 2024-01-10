@@ -343,35 +343,46 @@ createWorker = (uuid, chatID, phone) => {
 
         switch (data.type) {
             case 'message':
-                if(data.msg.includes("/template")){
-                    let template = data.msg.replace("/template","")
-                    template = data.msg.replace("[","")
-                    template = data.msg.replace("]","")
-                    console.log("template:",template)
-                    axiosRequest = {
-                            url,
-                            method: 'post',
-                            headers: {
-                                'D360-API-KEY': authorization
+                let data_1 = ""
+                if(data.msg.includes("/buttons")){
+
+                    let mensajeIN = data.msg.split("/")
+                    let buttons = mensajeIN[1].replace("buttons","")
+                    buttons = buttons.replace("[","")
+                    buttons = buttons.replace("]","")
+                    buttons = buttons.split(",")
+
+                    data_1 = {
+                        'channel': 'whatsapp',
+                        'source': source,
+                        'destination': data.phone,
+                        'src.name': srcname,                    
+                        'disablePreview': 'true',
+                        'encode': 'true' 
+                      }
+                      const textoBotones = mensajeIN[0];
+                      const opciones = buttons.map((titulo) => {
+                        return {
+                            "type": "text",
+                            "title": titulo.trim()
+                        };
+                    });
+
+                        data_1.message =  JSON.stringify({
+                            "type":"quick_reply",
+                            "msgid":"qr1",
+                            "content":{
+                               "type":"text",
+                               "header":"",
+                               "text":textoBotones,
+                               "caption":""
                             },
-                            data: {
-                                    "to": data.phone,
-                                    "type": "template",
-                                    "template": { 
-                                    "namespace": "c8ae5f90_307a_ca4c_b8f6_d1e2a2573574",
-                                        "language": {
-                                            "policy": "deterministic",
-                                            "code": "de"
-                                        },
-                                        "name": "disclaimer",
-                                        "components": [{
-                                            "type": "body"
-                                            }]
-                                    }
-                                }
-                            }
+                            "options":opciones
+                         })
+
+
                 } else {
-                    let data_1 = qs.stringify({
+                    data_1 = qs.stringify({
                             'channel': 'whatsapp',
                             'source': source,
                             'src.name': srcname,
@@ -380,18 +391,19 @@ createWorker = (uuid, chatID, phone) => {
                             'disablePreview': 'true',
                             'encode': 'true' 
                           })
-                    axiosRequest = {
-                        url,
-                        method: 'post',
-                        maxBodyLength: Infinity,
-                        headers: {
-                            'apikey': authorization,
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        data:data_1
-
-                        }
             }
+                axiosRequest = {
+                url,
+                method: 'post',
+                maxBodyLength: Infinity,
+                headers: {
+                    'apikey': authorization,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data:data_1
+
+                }
+
                 await axios.request(axiosRequest)
                 .then((response) => {
                     console.log(JSON.stringify(response.data));
@@ -410,7 +422,7 @@ createWorker = (uuid, chatID, phone) => {
                 const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
                 //const fileUrl = `https://apibp-conauto.nimbuscc.mx:3030/uploads/${data.fileName.replace(/ /g, "_")}`
                 
-                let data_1 = {
+                data_1 = {
                     'channel': 'whatsapp',
                     'source': source,
                     'destination': data.phone,

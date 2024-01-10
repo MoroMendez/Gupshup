@@ -55,6 +55,15 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                 }
 
 
+            } else if (p.type=='button_reply') {
+                dataMessage = {
+                    whatsappNumber: wnumber,
+                    phone: p.source,
+                    message: p.payload.title,
+                    name: s.name,
+                    type: 'TEXT',
+                }
+                
             } else if (p.type=='sticker') {
                 dataMessage = {
                     whatsappNumber: wnumber,
@@ -64,7 +73,7 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     type: 'TEXT',
                 }
                 
-            } else if (p.type=='location') {
+            }else if (p.type=='location') {
                 dataMessage = {
                     whatsappNumber: wnumber,
                     phone: p.source,
