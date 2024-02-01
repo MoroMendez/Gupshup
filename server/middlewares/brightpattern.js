@@ -338,12 +338,13 @@ createWorker = (uuid, chatID, phone) => {
 
         let axiosRequest = null
         let answ = null
+        let data_1 = ""
 
         //console.log('data', data)
 
         switch (data.type) {
             case 'message':
-                let data_1 = ""
+                
                 if(data.msg.includes("/buttons")){
 
                     let mensajeIN = data.msg.split("/")
