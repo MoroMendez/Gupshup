@@ -106,7 +106,7 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     fileName = p.payload.name
                 }
 
-                answFile = await downloadFile(filePath, pathFile.join(__dirname, `../${get('global.upload.directory')}/${fileName}`))
+               // answFile = await downloadFile(filePath, pathFile.join(__dirname, `../${get('global.upload.directory')}/${fileName}`))
 
                 dataMessage = {
                     whatsappNumber: wnumber,
