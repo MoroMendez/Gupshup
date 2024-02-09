@@ -420,8 +420,7 @@ createWorker = (uuid, chatID, phone) => {
 
                 const answFile = await downloadFile(uuid, data)
 
-                const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
-                //const fileUrl = `https://apibp-conauto.nimbuscc.mx:3030/uploads/${data.fileName.replace(/ /g, "_")}`
+              const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
                 
                 data_1 = {
                     'channel': 'whatsapp',
@@ -434,9 +433,8 @@ createWorker = (uuid, chatID, phone) => {
 
                  const encodedParams = new URLSearchParams(); 
                 
-                //console.log(data.fileType)
-                if (data.fileType in ['JPG', 'JPEG', 'PNG', 'GIF']){
-                    
+                 // console.log(`data.fileType: '${data.fileType}'`)
+                 if (['JPG', 'JPEG', 'PNG', 'GIF'].includes(data.fileType)){                    
                     data_1.message =  JSON.stringify({
                         "type":"image",
                         "originalUrl":fileUrl,
@@ -444,7 +442,7 @@ createWorker = (uuid, chatID, phone) => {
                         "caption":data.fileName
                      })
                     
-                 } else if (data.fileType in ['AAC', 'AMR', 'MP3', 'OGG'])
+                 } else if (['AAC', 'AMR', 'MP3', 'OGG'].includes(data.fileType))
                  {
                      data_1.message = JSON.stringify({
                         "type":"audio",
