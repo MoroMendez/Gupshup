@@ -70,7 +70,7 @@ if (!isMainThread) {
 
             answ.data.events.filter(e => e.event == 'chat_session_file').forEach(e => {
 
-                const validExt = ['JPG', 'JPEG', 'PNG', 'AAC', 'MP4', 'AMR', 'MP3', 'OGG', 'PDF', 'XLS', 'XLSL', 'DOC', 'DOCX']
+                const validExt = ['JPG', 'JPEG', 'PNG', 'AAC', 'MP4', 'AMR', 'MP3', 'OGG', 'PDF', 'XLS', 'XLSX', 'DOC', 'DOCX','PPT', 'PPTX','CSV','ZIP','RAR']
 
                 if (validExt.includes(path.extname(e.file_name).substr(1).toUpperCase())) {
 
