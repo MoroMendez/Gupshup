@@ -328,7 +328,7 @@ createWorker = (uuid, chatID, phone) => {
     worker.on('exit', _ => {
         console.log(`Thread exiting`);
     })
-    
+
     worker.on('message', async (data) => {
         let url = get('accounts.gupshup.url')
         let authorization = get('accounts.gupshup.accesstoken')
@@ -343,8 +343,7 @@ createWorker = (uuid, chatID, phone) => {
         //console.log('data', data)
 
         switch (data.type) {
-            case 'message':
-                
+            case 'message':                
                 if(data.msg.includes("/buttons")){
 
                     let mensajeIN = data.msg.split("/")
@@ -384,16 +383,12 @@ createWorker = (uuid, chatID, phone) => {
 
                 } 
                 else if(data.msg.includes("/attachment")){
-
                     let mensajeIN = data.msg.split(":")
                     console.log(mensajeIN)
                     let mensaje = mensajeIN[0].replace("/attachment","")
                     let attachment = (mensajeIN[1]+":"+mensajeIN[2]).split(",")
                     let tipo = attachment[1].trim()
                     attachment = attachment[0].trim()
-
-
-               
                 data_1 = {
                     'channel': 'whatsapp',
                     'source': source,
@@ -403,34 +398,40 @@ createWorker = (uuid, chatID, phone) => {
                     'encode': 'true' 
                   }
 
-                 if (tipo=="image"){                    
-                    data_1.message =  JSON.stringify({
-                        "type":"image",
-                        "originalUrl":attachment,
-                        "caption":mensaje
-                     })
+                switch(tipo) {
+                    case "image" :                   
+                        data_1.message =  JSON.stringify({
+                            "type":"image",
+                            "originalUrl":attachment,
+                            "caption":mensaje
+                        })
+                    break;  
+                    case "audio" :                    
+                        data_1.message = JSON.stringify({
+                            "type":"audio",
+                            "url":attachment
+                        })
+                    break;
+                    case "video" :
+                        data_1.message = JSON.stringify({
+                                "type": "video",
+                                "url": attachment,
+                                "caption": mensaje,
+                                "id": "mediaId"                        
+                        })
+                    break;
+                    default:
+                        data_1.message = JSON.stringify({
+                            "type":"file",
+                            "url":fileUrl,
+                            "filename":data.fileName
+                        })
+                        break
+                    }
                     
-                 } else if (tipo=="audio") {
-                     data_1.message = JSON.stringify({
-                        "type":"audio",
-                        "url":attachment
-                     })
-                 }  else if (tipo=="video") {
-                    data_1.message = JSON.stringify({
-                            "type": "video",
-                            "url": attachment,
-                            "caption": mensaje,
-                            "id": "mediaId"                        
-                    })
-                } else {
-                    data_1.message = JSON.stringify({
-                        "type":"file",
-                        "url":fileUrl,
-                        "filename":data.fileName
-                     })
-                 }
 
                 } else {
+                    
                     data_1 = qs.stringify({
                             'channel': 'whatsapp',
                             'source': source,
@@ -518,10 +519,6 @@ createWorker = (uuid, chatID, phone) => {
                     },
                     data:data_1
                 }
-
-
-                //console.log(axiosRequest)
-
                 await axios.request(axiosRequest)
                     .then(function (response) {
                         console.log(response.data);
