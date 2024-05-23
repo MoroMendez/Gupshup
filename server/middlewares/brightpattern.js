@@ -382,6 +382,54 @@ createWorker = (uuid, chatID, phone) => {
                          })
 
 
+                } 
+                else if(data.msg.includes("/attachment")){
+
+                    let mensajeIN = data.msg.split(":")
+                    console.log(mensajeIN)
+                    let mensaje = mensajeIN[0].replace("/attachment","")
+                    let attachment = (mensajeIN[1]+":"+mensajeIN[2]).split(",")
+                    let tipo = attachment[1].trim()
+                    attachment = attachment[0].trim()
+
+
+               
+                data_1 = {
+                    'channel': 'whatsapp',
+                    'source': source,
+                    'destination': data.phone,
+                    'src.name': srcname,                    
+                    'disablePreview': 'true',
+                    'encode': 'true' 
+                  }
+
+                 if (tipo=="image"){                    
+                    data_1.message =  JSON.stringify({
+                        "type":"image",
+                        "originalUrl":attachment,
+                        "caption":mensaje
+                     })
+                    
+                 } else if (tipo=="audio") {
+                     data_1.message = JSON.stringify({
+                        "type":"audio",
+                        "url":attachment
+                     })
+                 }  else if (tipo=="video") {
+                    data_1.message = JSON.stringify({
+                            "type": "video",
+                            "url": attachment,
+                            "caption": mensaje,
+                            "id": "mediaId"                        
+                    })
+                } else {
+                    data_1.message = JSON.stringify({
+                        "type":"file",
+                        "url":fileUrl,
+                        "filename":data.fileName
+                     })
+                 }
+
                 } else {
                     data_1 = qs.stringify({
                             'channel': 'whatsapp',
@@ -393,6 +441,8 @@ createWorker = (uuid, chatID, phone) => {
                             'encode': 'true' 
                           })
             }
+
+            
                 axiosRequest = {
                 url,
                 method: 'post',
@@ -402,7 +452,6 @@ createWorker = (uuid, chatID, phone) => {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 data:data_1
-
                 }
 
                 await axios.request(axiosRequest)
