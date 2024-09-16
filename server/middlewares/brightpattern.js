@@ -9,7 +9,7 @@ const FormData = require('form-data');
 const { URLSearchParams } = require('url');
 // const { PassThrough } = require("stream");
 // const { Http2ServerResponse } = require('http2')
-// const pathFile = require('path')
+const pathFile = require('path')
 
 requestChat = async (uuid, connector, data) => {
     const cfg = log.initiate(logger, uuid, 'requestChat')
@@ -420,6 +420,7 @@ createWorker = (uuid, chatID, phone) => {
                     let attachment = (mensajeIN[1] + ":" + mensajeIN[2]).split(",")
                     let tipo = attachment[1].trim()
                     attachment = attachment[0].trim()
+                    let filename = pathFile.basename(attachment) 
                     data_1 = {
                         'channel': 'whatsapp',
                         'source': source,
@@ -434,7 +435,8 @@ createWorker = (uuid, chatID, phone) => {
                             data_1.message = JSON.stringify({
                                 "type": "image",
                                 "originalUrl": attachment,
-                                "caption": mensaje
+                                "caption": mensaje,
+                                "filename":filename,
                             })
                             break;
                         case "audio":
