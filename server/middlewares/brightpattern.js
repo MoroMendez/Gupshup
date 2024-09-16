@@ -368,7 +368,24 @@ createWorker = (uuid, chatID, phone) => {
                         };
                     });
 
+                    if (opciones.count()>3){
                         data_1.message =  JSON.stringify({
+                            "type":"list",
+                            "msgid":"qr1",
+                            "globalButtons": [
+                                    {
+                                        "type": "text",
+                                        "title": "textoBotones"
+                                    }
+                                ],
+                                "items": [
+                                        {
+                                            "options": opciones
+                                        }
+                                    ]
+                         }) 
+                    }else{
+                       data_1.message =  JSON.stringify({
                             "type":"quick_reply",
                             "msgid":"qr1",
                             "content":{
@@ -378,7 +395,10 @@ createWorker = (uuid, chatID, phone) => {
                                "caption":""
                             },
                             "options":opciones
-                         })
+                         }) 
+                    }
+
+                        
 
 
                 } 
