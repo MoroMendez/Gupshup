@@ -370,13 +370,14 @@ createWorker = (uuid, chatID, phone) => {
                     });
 console.log("cantidad de botones",nbottons)
                     if (nbottons > 3){
+                        console.log("list",nbottons)
                         data_1.message =  JSON.stringify({
                             "type":"list",
                             "msgid":"qr1",
                             "globalButtons": [
                                     {
                                         "type": "text",
-                                        "title": "textoBotones"
+                                        "title": textoBotones
                                     }
                                 ],
                                 "items": [
@@ -385,7 +386,9 @@ console.log("cantidad de botones",nbottons)
                                         }
                                     ]
                          }) 
+                         console.log(data_1.message)
                     }else{
+                       console.log("quick_reply",nbottons)
                        data_1.message =  JSON.stringify({
                             "type":"quick_reply",
                             "msgid":"qr1",
