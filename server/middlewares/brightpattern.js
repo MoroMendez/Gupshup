@@ -351,6 +351,7 @@ createWorker = (uuid, chatID, phone) => {
                     buttons = buttons.replace("[","")
                     buttons = buttons.replace("]","")
                     buttons = buttons.split(",")
+                    const nbottons = buttons.length
 
                     data_1 = {
                         'channel': 'whatsapp',
@@ -367,8 +368,8 @@ createWorker = (uuid, chatID, phone) => {
                             "title": titulo.trim()
                         };
                     });
-
-                    if (opciones.length > 3){
+console.log("cantidad de botones",nbottons)
+                    if (nbottons > 3){
                         data_1.message =  JSON.stringify({
                             "type":"list",
                             "msgid":"qr1",
