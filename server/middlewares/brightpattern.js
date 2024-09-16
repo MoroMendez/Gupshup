@@ -367,17 +367,18 @@ createWorker = (uuid, chatID, phone) => {
                         const opciones = buttons.map((titulo) => {
                             return {
                                 "type": "text",
-                                "title": titulo.trim(),
+                                "title": titulo.trim()
                             };
                         });
 
                         data_1.message = JSON.stringify({
                             "type": "list",
                             "title": textoBotones,
+                            "body": "Click Main Menu",
                             "globalButtons": [
                                 {
                                     "type": "text",
-                                    "title": "Menú"
+                                    "title": textoBotones
                                 }
                             ],
                             "items": [

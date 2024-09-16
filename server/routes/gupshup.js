@@ -64,6 +64,15 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     type: 'TEXT',
                 }
                 
+            } else if (p.type=='list_reply') {
+                dataMessage = {
+                    whatsappNumber: wnumber,
+                    phone: p.source,
+                    message: p.payload.title,
+                    name: s.name,
+                    type: 'TEXT',
+                }
+                
             } else if (p.type=='sticker') {
                 dataMessage = {
                     whatsappNumber: wnumber,
