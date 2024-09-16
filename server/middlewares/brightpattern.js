@@ -507,8 +507,6 @@ createWorker = (uuid, chatID, phone) => {
                         "filename":data.fileName
                      })
                  }
-
-
                  axiosRequest = {
                     url,
                     method: 'post',
