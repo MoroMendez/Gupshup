@@ -343,13 +343,13 @@ createWorker = (uuid, chatID, phone) => {
         //console.log('data', data)
 
         switch (data.type) {
-            case 'message':                
-                if(data.msg.includes("/buttons")){
+            case 'message':
+                if (data.msg.includes("/buttons")) {
 
                     let mensajeIN = data.msg.split("/")
-                    let buttons = mensajeIN[1].replace("buttons","")
-                    buttons = buttons.replace("[","")
-                    buttons = buttons.replace("]","")
+                    let buttons = mensajeIN[1].replace("buttons", "")
+                    buttons = buttons.replace("[", "")
+                    buttons = buttons.replace("]", "")
                     buttons = buttons.split(",")
                     const nbottons = buttons.length
 
@@ -357,135 +357,142 @@ createWorker = (uuid, chatID, phone) => {
                         'channel': 'whatsapp',
                         'source': source,
                         'destination': data.phone,
-                        'src.name': srcname,                    
+                        'src.name': srcname,
                         'disablePreview': 'true',
-                        'encode': 'true' 
-                      }
-                      const textoBotones = mensajeIN[0];
-                      const opciones = buttons.map((titulo) => {
-                        return {
-                            "type": "text",
-                            "title": titulo.trim()
-                        };
-                    });
-console.log("cantidad de botones",nbottons)
-                    if (nbottons > 3){
-                        console.log("list",nbottons)
-                        data_1.message =  JSON.stringify({
-                            "type":"list",
-                            "msgid":"qr1",
+                        'encode': 'true'
+                    }
+                    const textoBotones = mensajeIN[0];
+
+                    if (nbottons > 3) {
+                        const opciones = buttons.map((titulo) => {
+                            return {
+                                "type": "text",
+                                "title": titulo.trim(),
+                                "description": "description 🙂😇",
+                                "postbackText": "payload",
+                            };
+                        });
+
+                        data_1.message = JSON.stringify({
+                            "type": "list",
+                            "msgid": "qr1",
                             "globalButtons": [
-                                    {
-                                        "type": "text",
-                                        "title": textoBotones
-                                    }
-                                ],
-                                "items": [
-                                        {
-                                            "options": opciones
-                                        }
-                                    ]
-                         }) 
-                         console.log(data_1.message)
-                    }else{
-                       console.log("quick_reply",nbottons)
-                       data_1.message =  JSON.stringify({
-                            "type":"quick_reply",
-                            "msgid":"qr1",
-                            "content":{
-                               "type":"text",
-                               "header":"",
-                               "text":textoBotones,
-                               "caption":""
+                                {
+                                    "type": "text",
+                                    "title": textoBotones
+                                }
+                            ],
+                            "items": [
+                                {
+                                    "options": opciones
+                                }
+                            ]
+                        })
+                    } else {
+                        const opciones = buttons.map((titulo) => {
+                            return {
+                                "type": "text",
+                                "title": titulo.trim()
+                            };
+                        });
+
+                        data_1.message = JSON.stringify({
+                            "type": "quick_reply",
+                            "msgid": "qr1",
+                            "content": {
+                                "type": "text",
+                                "header": "",
+                                "text": textoBotones,
+                                "caption": ""
                             },
-                            "options":opciones
-                         }) 
+                            "options": opciones
+                        })
                     }
 
-                        
 
 
-                } 
-                else if(data.msg.includes("/attachment")){
+
+                }
+                else if (data.msg.includes("/attachment")) {
                     let mensajeIN = data.msg.split(":")
                     console.log(mensajeIN)
-                    let mensaje = mensajeIN[0].replace("/attachment","")
-                    let attachment = (mensajeIN[1]+":"+mensajeIN[2]).split(",")
+                    let mensaje = mensajeIN[0].replace("/attachment", "")
+                    let attachment = (mensajeIN[1] + ":" + mensajeIN[2]).split(",")
                     let tipo = attachment[1].trim()
                     attachment = attachment[0].trim()
-                data_1 = {
-                    'channel': 'whatsapp',
-                    'source': source,
-                    'destination': data.phone,
-                    'src.name': srcname,                    
-                    'disablePreview': 'true',
-                    'encode': 'true' 
-                  }
+                    data_1 = {
+                        'channel': 'whatsapp',
+                        'source': source,
+                        'destination': data.phone,
+                        'src.name': srcname,
+                        'disablePreview': 'true',
+                        'encode': 'true'
+                    }
 
-                switch(tipo) {
-                    case "image" :                   
-                        data_1.message =  JSON.stringify({
-                            "type":"image",
-                            "originalUrl":attachment,
-                            "caption":mensaje
-                        })
-                    break;  
-                    case "audio" :                    
-                        data_1.message = JSON.stringify({
-                            "type":"audio",
-                            "url":attachment
-                        })
-                    break;
-                    case "video" :
-                        data_1.message = JSON.stringify({
+                    switch (tipo) {
+                        case "image":
+                            data_1.message = JSON.stringify({
+                                "type": "image",
+                                "originalUrl": attachment,
+                                "caption": mensaje
+                            })
+                            break;
+                        case "audio":
+                            data_1.message = JSON.stringify({
+                                "type": "audio",
+                                "url": attachment
+                            })
+                            break;
+                        case "video":
+                            data_1.message = JSON.stringify({
                                 "type": "video",
                                 "url": attachment,
                                 "caption": mensaje,
-                                "id": "mediaId"                        
-                        })
-                    break;
-                    default:
-                        data_1.message = JSON.stringify({
-                            "type":"file",
-                            "url":fileUrl,
-                            "filename":data.fileName
-                        })
-                        break
+                                "id": "mediaId"
+                            })
+                            break;
+                        default:
+                            data_1.message = JSON.stringify({
+                                "type": "file",
+                                "url": fileUrl,
+                                "filename": data.fileName
+                            })
+                            break
                     }
-                    
+
 
                 } else {
-                    
-                    data_1 = qs.stringify({
-                            'channel': 'whatsapp',
-                            'source': source,
-                            'src.name': srcname,
-                            'destination': data.phone,
-                            'message': data.msg,
-                            'disablePreview': 'true',
-                            'encode': 'true' 
-                          })
-            }
 
-            
+                    data_1 = qs.stringify({
+                        'channel': 'whatsapp',
+                        'source': source,
+                        'src.name': srcname,
+                        'destination': data.phone,
+                        'message': data.msg,
+                        'disablePreview': 'true',
+                        'encode': 'true'
+                    })
+                }
+
+
                 axiosRequest = {
-                url,
-                method: 'post',
-                maxBodyLength: Infinity,
-                headers: {
-                    'apikey': authorization,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                data:data_1
+                    url,
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    headers: {
+                        'apikey': authorization,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    data: data_1
                 }
 
                 await axios.request(axiosRequest)
-                .then((response) => {
-                    console.log(JSON.stringify(response.data));
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
+                    .then((response) => {
+                        console.log(JSON.stringify(response.data));
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
                 break;
 
             case 'file':
@@ -494,44 +501,42 @@ console.log("cantidad de botones",nbottons)
 
                 const answFile = await downloadFile(uuid, data)
 
-              const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
-                
+                const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
+
                 data_1 = {
                     'channel': 'whatsapp',
                     'source': source,
                     'destination': data.phone,
-                    'src.name': srcname,                    
+                    'src.name': srcname,
                     'disablePreview': 'true',
-                    'encode': 'true' 
-                  }
+                    'encode': 'true'
+                }
 
-                 const encodedParams = new URLSearchParams(); 
-                
-                 // console.log(`data.fileType: '${data.fileType}'`)
-                 if (['JPG', 'JPEG', 'PNG', 'GIF'].includes(data.fileType)){                    
-                    data_1.message =  JSON.stringify({
-                        "type":"image",
-                        "originalUrl":fileUrl,
-                        "previewUrl":fileUrl,
-                        "caption":data.fileName
-                     })
-                    
-                 } else if (['AAC', 'AMR', 'MP3', 'OGG'].includes(data.fileType))
-                 {
-                     data_1.message = JSON.stringify({
-                        "type":"audio",
-                        "url":fileUrl
-                     })
-                 }
-                else
-                {
+                const encodedParams = new URLSearchParams();
+
+                // console.log(`data.fileType: '${data.fileType}'`)
+                if (['JPG', 'JPEG', 'PNG', 'GIF'].includes(data.fileType)) {
                     data_1.message = JSON.stringify({
-                        "type":"file",
-                        "url":fileUrl,
-                        "filename":data.fileName
-                     })
-                 }
-                 axiosRequest = {
+                        "type": "image",
+                        "originalUrl": fileUrl,
+                        "previewUrl": fileUrl,
+                        "caption": data.fileName
+                    })
+
+                } else if (['AAC', 'AMR', 'MP3', 'OGG'].includes(data.fileType)) {
+                    data_1.message = JSON.stringify({
+                        "type": "audio",
+                        "url": fileUrl
+                    })
+                }
+                else {
+                    data_1.message = JSON.stringify({
+                        "type": "file",
+                        "url": fileUrl,
+                        "filename": data.fileName
+                    })
+                }
+                axiosRequest = {
                     url,
                     method: 'post',
                     maxBodyLength: Infinity,
@@ -539,16 +544,16 @@ console.log("cantidad de botones",nbottons)
                         'apikey': authorization,
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    data:data_1
+                    data: data_1
                 }
                 await axios.request(axiosRequest)
                     .then(function (response) {
                         console.log(response.data);
-                      })
+                    })
                     .catch(function (error) {
                         console.error(error);
-                      })
-                
+                    })
+
 
                 break;
 
