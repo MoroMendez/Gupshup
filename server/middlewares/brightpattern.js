@@ -368,7 +368,7 @@ createWorker = (uuid, chatID, phone) => {
                         };
                     });
 
-                    if (opciones.length() > 3){
+                    if (opciones.length > 3){
                         data_1.message =  JSON.stringify({
                             "type":"list",
                             "msgid":"qr1",
