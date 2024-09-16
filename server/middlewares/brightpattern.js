@@ -368,18 +368,16 @@ createWorker = (uuid, chatID, phone) => {
                             return {
                                 "type": "text",
                                 "title": titulo.trim(),
-                                "description": "description 🙂😇"
                             };
                         });
 
                         data_1.message = JSON.stringify({
                             "type": "list",
-                            "title": "XYZ STORE",
-                            "body": "Click Main Menu",
+                            "title": textoBotones,
                             "globalButtons": [
                                 {
                                     "type": "text",
-                                    "title": textoBotones
+                                    "title": "Menú"
                                 }
                             ],
                             "items": [
