@@ -101,7 +101,7 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     fileName = Mediafile[0]+'.jpg'
                     fileType = "image"
 
-                } if (p.type=='sticker') {
+                } else if (p.type=='sticker') {
                     filePath = p.payload.url
                     Mediafile = filePath.toString().split('/')
                     Mediafile = Mediafile[Mediafile.length - 1]
@@ -154,6 +154,8 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     fileName: fileName,
                     fileType: fileType
                 }
+                console.log("dataMessage",dataMessage);
+                
             }
 
             answBP = await BP.requestChat(cfg.uuid, path, dataMessage)
