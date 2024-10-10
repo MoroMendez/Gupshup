@@ -362,11 +362,10 @@ createWorker = (uuid, chatID, phone) => {
                 if (data.msg.includes("/buttons")) {
 
                     let mensajeIN = data.msg.split("/")
-                    let buttons = mensajeIN[1].replace("buttons", "").trim()
+                    let buttons = mensajeIN[1].replace("buttons","")
                     buttons = buttons.replace("[", "")
                     buttons = buttons.replace("]", "")
-                    buttons = buttons.split("\]\[")
-                    console.log("boton", buttons)
+                    buttons = buttons.split(",")
                     const nbottons = buttons.length
 
                     data_1 = {
