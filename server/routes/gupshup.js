@@ -44,7 +44,7 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
         //     return res.status(200).json( )
         // }
 
-        if (p.type=='text' || p.type=='audio') {
+        if (p.type=='text') {
 
                 dataMessage = {
                     whatsappNumber: wnumber,
@@ -73,22 +73,16 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     type: 'TEXT',
                 }
                 
-            } else if (p.type=='sticker') {
-                dataMessage = {
-                    whatsappNumber: wnumber,
-                    phone: p.source,
-                    message: `Sticker - ${p.payload.url}`,
-                    name: s.name,
-                    type: 'TEXT',
-                }
-                
-            }else if (p.type=='location') {
+            } else if (p.type=='location') {
                 dataMessage = {
                     whatsappNumber: wnumber,
                     phone: p.source,
                     message: `https://www.google.com/maps/@${p.payload.latitude},${p.payload.longitude},15z?entry=ttu`,
                     name: s.name,
                     type: 'TEXT',
+                    subtype:'location',
+                    latitude: p.payload.latitude,
+                    longitude: p.payload.longitude
                 }
                 
             } else {
@@ -105,14 +99,47 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     Mediafile = Mediafile.toString().split('?')
                     console.log('Mediafile 2',Mediafile)
                     fileName = Mediafile[0]+'.jpg'
+                    fileType = "image"
+
+                } if (p.type=='sticker') {
+                    filePath = p.payload.url
+                    Mediafile = filePath.toString().split('/')
+                    Mediafile = Mediafile[Mediafile.length - 1]
+                    console.log('Mediafile 1',Mediafile)
+                    Mediafile = Mediafile.toString().split('?')
+                    console.log('Mediafile 2',Mediafile)
+                    fileName = Mediafile[0]+'.webp'
+                    fileType = "image"
 
                 } else if (p.type=='file') {
                     filePath = p.payload.url
                     fileName = p.payload.name
+                    fileType = "attachment"
 
+                } else if (p.type=='audio') {                                      
+                    filePath = p.payload.url
+                    Mediafile = filePath.toString().split('/')
+                    Mediafile = Mediafile[Mediafile.length - 1]
+                    console.log('Mediafile 1',Mediafile)
+                    Mediafile = Mediafile.toString().split('?')
+                    console.log('Mediafile 2',Mediafile)
+                    fileName = Mediafile[0]+'.mp3'
+                    fileType = "attachment"
+                
+                } else if (p.type=='video') {                                      
+                    filePath = p.payload.url
+                    Mediafile = filePath.toString().split('/')
+                    Mediafile = Mediafile[Mediafile.length - 1]
+                    console.log('Mediafile 1',Mediafile)
+                    Mediafile = Mediafile.toString().split('?')
+                    console.log('Mediafile 2',Mediafile)
+                    fileName = Mediafile[0]+'.mp4'
+                    fileType = "attachment"
+                
                 } else {
                     filePath = p.payload.url
                     fileName = p.payload.name
+                    fileType = "attachment"
                 }
 
                answFile = await downloadFile(filePath, pathFile.join(__dirname, `../${get('global.upload.directory')}/${fileName}`))
@@ -124,7 +151,8 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
                     name: s.name,
                     type: 'FILE',
                     filePath: pathFile.join(__dirname, `../${get('global.upload.directory')}/${fileName}`),
-                    fileName: fileName
+                    fileName: fileName,
+                    fileType: fileType
                 }
             }
 

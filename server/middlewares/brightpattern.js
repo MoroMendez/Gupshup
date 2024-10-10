@@ -27,6 +27,8 @@ requestChat = async (uuid, connector, data) => {
             dataEvt.chatID = answChatOpen.chatID
 
             if (dataEvt.type !== 'TEXT') {
+               
+                
                 let answFile = await uploadFile(uuid, dataEvt)
 
                 if (answFile && answFile.ok) {
@@ -196,17 +198,30 @@ sendEventChat = async (uuid, data) => {
             event = {
                 event: "chat_session_file",
                 msg_id: `${data.chatID}:${(new Date).getTime()}`,
-                file_type: data.fileMimeType,
+                file_type: data.fileType,
                 file_id: data.fileId,
                 file_name: data.fileName
             }
+            console.log('chat_session',event)
+        } else if (data.subtype == "location") {
+                event = {
+                    "event": "chat_session_location",
+                    "msg_id": `${data.chatID}:${(new Date).getTime()}`,
+                    "url": data.message,
+                    "latitude": data.latitude,
+                    "longitude": data.longitude
+                }
+                console.log('chat_session',event)
         } else {
-            event = {
-                event: "chat_session_message",
-                msg_id: `${data.chatID}:${(new Date).getTime()}`,
-                msg: data.message
+                event = {
+                    event: "chat_session_message",
+                    msg_id: `${data.chatID}:${(new Date).getTime()}`,
+                    msg: data.message
+                }
+                console.log('chat_session',event)
             }
-        }
+
+        
 
         const axiosRequest = {
             url,
@@ -347,10 +362,11 @@ createWorker = (uuid, chatID, phone) => {
                 if (data.msg.includes("/buttons")) {
 
                     let mensajeIN = data.msg.split("/")
-                    let buttons = mensajeIN[1].replace("buttons", "")
+                    let buttons = mensajeIN[1].replace("buttons", "").trim()
                     buttons = buttons.replace("[", "")
                     buttons = buttons.replace("]", "")
-                    buttons = buttons.split(",")
+                    buttons = buttons.split("\]\[")
+                    console.log("boton", buttons)
                     const nbottons = buttons.length
 
                     data_1 = {
@@ -419,7 +435,7 @@ createWorker = (uuid, chatID, phone) => {
                     let attachment = (mensajeIN[1] + ":" + mensajeIN[2]).split(",")
                     let tipo = attachment[1].trim()
                     attachment = attachment[0].trim()
-                    let filename = pathFile.basename(attachment) 
+                    let filename = pathFile.basename(attachment)
                     data_1 = {
                         'channel': 'whatsapp',
                         'source': source,
@@ -435,7 +451,7 @@ createWorker = (uuid, chatID, phone) => {
                                 "type": "image",
                                 "originalUrl": attachment,
                                 "caption": mensaje,
-                                "filename":filename,
+                                "filename": filename,
                             })
                             break;
                         case "audio":
