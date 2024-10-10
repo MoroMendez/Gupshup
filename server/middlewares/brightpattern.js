@@ -366,6 +366,8 @@ createWorker = (uuid, chatID, phone) => {
                     buttons = buttons.replace("[", "")
                     buttons = buttons.replace("]", "")
                     buttons = buttons.split(",")
+                    console.log("botones",buttons);
+                    
                     const nbottons = buttons.length
 
                     data_1 = {
