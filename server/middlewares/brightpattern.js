@@ -363,6 +363,7 @@ createWorker = (uuid, chatID, phone) => {
 
                     let mensajeIN = data.msg.split("/")
                     let buttons = mensajeIN[1].replace("buttons","")
+                    buttons = buttons.replace(/(\]s*\[)/g, ",")
                     buttons = buttons.replace("[", "")
                     buttons = buttons.replace("]", "")
                     buttons = buttons.split(",")

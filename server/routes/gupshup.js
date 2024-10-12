@@ -21,7 +21,11 @@ app.post(`/${vendor}/${path}/webhook`, async(req, res) => {
 
     if(req.body.payload.type == 'sandbox-start') { return res.status(200).json( ) }
 
-    if(req.body.type == 'message-event' || req.body.type == 'billing-event') { return res.status(200).json( ) }
+    if(req.body.type == 'message-event' || req.body.type == 'billing-event') { 
+        console.log(req.body.payload.type);  
+        console.log(req.body.payload.id);        
+        return res.status(200).json( ) 
+    }
     
 
     
