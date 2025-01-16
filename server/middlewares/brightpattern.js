@@ -10,6 +10,7 @@ const { URLSearchParams } = require('url');
 // const { PassThrough } = require("stream");
 // const { Http2ServerResponse } = require('http2')
 const pathFile = require('path')
+const { time } = require('console')
 
 requestChat = async (uuid, connector, data) => {
     const cfg = log.initiate(logger, uuid, 'requestChat')
@@ -320,7 +321,14 @@ downloadFile = async (uuid, data) => {
         const data64 = await axios.request(axiosRequest).then(response => {
             return response = response.data.toString('base64')
         })
+        const now = new Date()
+        const dif = `${now.getHours()}${now.getMinutes()}${now.getSeconds()}`
+        const extname = pathFile.extname(data.fileName); // Obtener la extensión del archivo.
+        const basename = pathFile.basename(data.fileName, extname); // Obtener el nombre sin la extensión.
 
+        // Construir el nuevo nombre del archivo.
+        const newFileName = `${basename}_${dif}${extname}`;
+        data.fileName = newFileName
         fs.writeFile(`./public/uploads/${data.fileName.replace(/ /g, "_")}`, data64, { encoding: 'base64' }, (err) => { if (err) throw err; });
 
         return { ok: true, data: data64 }
@@ -334,6 +342,22 @@ downloadFile = async (uuid, data) => {
         log.info(cfg, 'Response', false)
         return false
     }
+}
+
+deleteFile = async (filePath, callback) => {
+    fs.unlinkSync(filePath, (err) => {
+        if (err) {
+            if (err.code === 'ENOENT') {
+                // El archivo no existe
+                callback(new Error(`El archivo "${filePath}" no existe.`));
+            } else {
+                // Otro error
+                callback(new Error(`Error al intentar eliminar el archivo: ${err.message}`));
+            }
+        } else {
+            callback(null, `El archivo "${filePath}" fue eliminado exitosamente.`);
+        }
+    });
 }
 
 createWorker = (uuid, chatID, phone) => {
@@ -518,7 +542,7 @@ createWorker = (uuid, chatID, phone) => {
             case 'file':
                 const dir = get('global.upload.directory')
                 const uri = get('global.upload.uri')
-
+                const OriginName = data.fileName
                 const answFile = await downloadFile(uuid, data)
 
                 const fileUrl = `${file_url}/uploads/${data.fileName.replace(/ /g, "_")}`
@@ -539,8 +563,8 @@ createWorker = (uuid, chatID, phone) => {
                     data_1.message = JSON.stringify({
                         "type": "image",
                         "originalUrl": fileUrl,
-                        "previewUrl": fileUrl,
-                        "caption": data.fileName
+                        "previewUrl": fileUrl
+                        // "filename": OriginName
                     })
 
                 } else if (['AAC', 'AMR', 'MP3', 'OGG'].includes(data.fileType)) {
@@ -548,12 +572,11 @@ createWorker = (uuid, chatID, phone) => {
                         "type": "audio",
                         "url": fileUrl
                     })
-                }
-                else {
+                } else {
                     data_1.message = JSON.stringify({
                         "type": "file",
-                        "url": fileUrl,
-                        "filename": data.fileName
+                        "url": fileUrl
+                        // "filename": OriginName
                     })
                 }
                 axiosRequest = {
@@ -573,6 +596,14 @@ createWorker = (uuid, chatID, phone) => {
                     .catch(function (error) {
                         console.error(error);
                     })
+                    
+                    // deleteFile(`./public/uploads/${data.fileName.replace(/ /g, "_")}`, (err, mensaje) => {
+                    //     if (err) {
+                    //         console.error(err.message);
+                    //     } else {
+                    //         console.log(mensaje);
+                    //     }
+                    // });
 
 
                 break;
